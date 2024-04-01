@@ -18,8 +18,7 @@ model Org {
   org_name      String
   owner_name    String
   email         String   @unique
-  city          City     @relation(fields: [city_name], references: [city_name])
-  city_name     String
+  city          String
   cep           String
   phone         String
   password_hash String
@@ -72,6 +71,7 @@ model Pet {
   id          String   @id @default(cuid())
   name        String
   description String
+  city        String
   type        Type     @default(OTHER)
   age         Age      @default(OTHER)
   size        Size     @default(OTHER)
@@ -82,20 +82,8 @@ model Pet {
   org    Org    @relation(fields: [org_id], references: [id])
   org_id String
 
-  city      City   @relation(fields: [city_name], references: [city_name])
-  city_name String
-
   created_at DateTime  @default(now())
   adopted_at DateTime?
 
   @@map("pets")
-}
-
-model City {
-  id        String @id @default(cuid())
-  city_name String @unique
-  orgs      Org[]
-  pets      Pet[]
-
-  @@map("cities")
 }

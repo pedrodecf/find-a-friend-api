@@ -16,7 +16,7 @@ export class InMemoryPetsRepository implements PetsRepository {
       autonomy: data.autonomy as Autonomy,
       photos: data.photos as string[],
       org_id: data.org_id,
-      city_name: data.city_name,
+      city: data.city,
       created_at: new Date(),
       adopted_at: null,
     }

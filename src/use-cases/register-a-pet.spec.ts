@@ -21,7 +21,7 @@ describe('Register Use Case', () => {
       owner_name: 'Owner Name',
       email: 'test@email.com',
       cep: '12345678',
-      city_name: 'City',
+      city: 'City',
       phone: '12345678',
       password_hash: 'password',
     })
@@ -39,6 +39,7 @@ describe('Register Use Case', () => {
     })
 
     expect(pet.id).toEqual(expect.any(String))
+    expect(pet.city).toEqual(org.city)
   })
 
   it('should not be able to register a new pet without being bound a org', async () => {

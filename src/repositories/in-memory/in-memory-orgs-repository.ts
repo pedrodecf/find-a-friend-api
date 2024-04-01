@@ -11,7 +11,7 @@ export class InMemoryOrgsRepository implements OrgsRepository {
       owner_name: data.owner_name,
       email: data.email,
       cep: data.cep,
-      city_name: data.city_name,
+      city: data.city,
       phone: data.phone,
       password_hash: data.password_hash,
       created_at: new Date(),
