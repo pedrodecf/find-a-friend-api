@@ -53,6 +53,7 @@ export class RegisterAPetUseCase {
       autonomy,
       photos,
       org_id: org.id,
+      city_name: org.city_name,
     })
 
     return {

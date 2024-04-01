@@ -8,7 +8,7 @@ interface RegisterUseCaseRequest {
   owner_name: string
   email: string
   cep: string
-  city: string
+  city_name: string
   phone: string
   password: string
 }
@@ -25,7 +25,7 @@ export class RegisterUseCase {
     owner_name,
     email,
     cep,
-    city,
+    city_name,
     phone,
     password,
   }: RegisterUseCaseRequest): Promise<RegisterUseCaseResponse> {
@@ -41,7 +41,7 @@ export class RegisterUseCase {
       owner_name,
       email,
       cep,
-      city,
+      city_name,
       phone,
       password_hash,
     })

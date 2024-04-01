@@ -21,7 +21,7 @@ describe('Register Use Case', () => {
       owner_name: 'Owner Name',
       email: 'test@email.com',
       cep: '12345678',
-      city: 'City',
+      city_name: 'City',
       phone: '12345678',
       password_hash: 'password',
     })

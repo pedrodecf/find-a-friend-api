@@ -4,14 +4,14 @@ import { OrgsRepository } from '../orgs-repository'
 export class InMemoryOrgsRepository implements OrgsRepository {
   public orgs: Org[] = []
 
-  async create(data: Prisma.OrgCreateInput) {
+  async create(data: Prisma.OrgUncheckedCreateInput) {
     const org = {
       id: 'user-id',
       org_name: data.org_name,
       owner_name: data.owner_name,
       email: data.email,
       cep: data.cep,
-      city: data.city,
+      city_name: data.city_name,
       phone: data.phone,
       password_hash: data.password_hash,
       created_at: new Date(),

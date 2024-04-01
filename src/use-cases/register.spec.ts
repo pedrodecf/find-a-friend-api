@@ -19,12 +19,14 @@ describe('Register Use Case', () => {
       owner_name: 'Owner Name',
       email: 'test@email.com',
       cep: '12345678',
-      city: 'City',
+      city_name: 'City',
       phone: '12345678',
       password: 'password',
     })
 
     expect(org.id).toEqual(expect.any(String))
+    expect(org).toEqual(expect.objectContaining({ org_name: 'Org Name' }))
+    expect(org).toEqual(expect.objectContaining({ city_name: 'City' }))
   })
 
   it('should not be able to register a new org with the same email', async () => {
@@ -35,7 +37,7 @@ describe('Register Use Case', () => {
       owner_name: 'Owner Name',
       email,
       cep: '12345678',
-      city: 'City',
+      city_name: 'City',
       phone: '12345678',
       password: 'password',
     })
@@ -46,7 +48,7 @@ describe('Register Use Case', () => {
         owner_name: 'Owner Name',
         email,
         cep: '12345678',
-        city: 'City',
+        city_name: 'City',
         phone: '12345678',
         password: 'password',
       }),
@@ -59,7 +61,7 @@ describe('Register Use Case', () => {
       owner_name: 'Owner Name',
       email: 'test@email.com',
       cep: '12345678',
-      city: 'City',
+      city_name: 'City',
       phone: '12345678',
       password: 'password',
     })
