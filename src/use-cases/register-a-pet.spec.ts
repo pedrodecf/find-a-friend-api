@@ -3,6 +3,8 @@ import { InMemoryOrgsRepository } from '../repositories/in-memory/in-memory-orgs
 import { InMemoryPetsRepository } from '../repositories/in-memory/in-memory-pets-repository'
 import { RegisterAPetUseCase } from './register-a-pet'
 import { ResourceNotFoundError } from './errors/resource-not-found-error'
+import { makeOrg } from '../../tests/factories/make-org'
+import { makePet } from '../../tests/factories/make-pet'
 
 let orgsRepository: InMemoryOrgsRepository
 let petsRepository: InMemoryPetsRepository
@@ -16,45 +18,20 @@ describe('Register a Pet Use Case', () => {
   })
 
   it('should be able to register a new pet', async () => {
-    const org = await orgsRepository.create({
-      org_name: 'Org Name',
-      owner_name: 'Owner Name',
-      email: 'test@email.com',
-      cep: '12345678',
-      city: 'City',
-      phone: '12345678',
-      password_hash: 'password',
-    })
+    const org = await orgsRepository.create(makeOrg())
 
-    const { pet } = await sut.execute({
-      name: 'Pet Name',
-      description: 'Pet Description',
-      type: 'DOG',
-      age: 'ADULT',
-      size: 'MEDIUM',
-      stamina: 'MEDIUM',
-      autonomy: 'MEDIUM',
-      photos: ['photo1', 'photo2'],
-      org_id: org.id,
-    })
+    const { pet } = await sut.execute(
+      makePet({ org_id: org.id, org_city: org.city }),
+    )
 
     expect(pet.id).toEqual(expect.any(String))
     expect(pet.city).toEqual(org.city)
+    expect(pet.org_id).toEqual(org.id)
   })
 
   it('should not be able to register a new pet without being bound a org', async () => {
     await expect(() =>
-      sut.execute({
-        name: 'Pet Name',
-        description: 'Pet Description',
-        type: 'DOG',
-        age: 'ADULT',
-        size: 'MEDIUM',
-        stamina: 'MEDIUM',
-        autonomy: 'MEDIUM',
-        photos: ['photo1', 'photo2'],
-        org_id: 'inexistent-org-id',
-      }),
+      sut.execute(makePet({ org_id: 'non-existing-org-id' })),
     ).rejects.toBeInstanceOf(ResourceNotFoundError)
   })
 }) //

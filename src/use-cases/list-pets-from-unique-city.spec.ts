@@ -3,6 +3,8 @@ import { InMemoryOrgsRepository } from '../repositories/in-memory/in-memory-orgs
 import { InMemoryPetsRepository } from '../repositories/in-memory/in-memory-pets-repository'
 import { ResourceNotFoundError } from './errors/resource-not-found-error'
 import { ListPetsFromUniqueCityUseCase } from './list-pets-from-unique-city'
+import { makeOrg } from '../../tests/factories/make-org'
+import { makePet } from '../../tests/factories/make-pet'
 
 let petsRepository: InMemoryPetsRepository
 let orgsRepository: InMemoryOrgsRepository
@@ -16,56 +18,22 @@ describe('List Pets From Unique City Use Case', () => {
   })
 
   it('should be able to list pets from unique city', async () => {
-    const org = await orgsRepository.create({
-      id: 'org-id-1',
-      org_name: 'Org Name',
-      owner_name: 'Owner Name',
-      email: 'test@email.com',
-      cep: '12345678',
-      city: 'Cidade dos Gatos',
-      phone: '12345678',
-      password_hash: 'password',
-    })
+    const firstOrg = await orgsRepository.create(makeOrg({ city: 'Cidade A' }))
+    await petsRepository.create(
+      makePet({ org_id: firstOrg.id, org_city: firstOrg.city, name: 'Gato 1' }),
+    )
 
-    await petsRepository.create({
-      name: 'Gato 1',
-      description: 'Gato Laranja',
-      type: 'CAT',
-      age: 'ADULT',
-      size: 'SMALL',
-      stamina: 'LOW',
-      autonomy: 'LOW',
-      photos: ['photo1', 'photo2'],
-      org_id: org.id,
-      city: org.city,
-    })
-
-    const secondOrg = await orgsRepository.create({
-      id: 'org-id-2',
-      org_name: 'Org Name',
-      owner_name: 'Owner Name',
-      email: 'test@email.com',
-      cep: '12345678',
-      city: 'Cidade dos Gatos Amarelos',
-      phone: '12345678',
-      password_hash: 'password',
-    })
-
-    await petsRepository.create({
-      name: 'Gato 2',
-      description: 'Gato Amarelo',
-      type: 'CAT',
-      age: 'ADULT',
-      size: 'SMALL',
-      stamina: 'LOW',
-      autonomy: 'LOW',
-      photos: ['photo1', 'photo2'],
-      org_id: secondOrg.id,
-      city: secondOrg.city,
-    })
+    const secondOrg = await orgsRepository.create(makeOrg({ city: 'Cidade B' }))
+    await petsRepository.create(
+      makePet({
+        org_id: secondOrg.id,
+        org_city: secondOrg.city,
+        name: 'Gato 2',
+      }),
+    )
 
     const { pets } = await sut.execute({
-      city: org.city,
+      city: firstOrg.city,
     })
 
     expect(pets.length).toBe(1)

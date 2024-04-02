@@ -4,7 +4,6 @@ import { InMemoryPetsRepository } from '../repositories/in-memory/in-memory-pets
 import { makeOrg } from '../../tests/factories/make-org'
 import { makePet } from '../../tests/factories/make-pet'
 import { SearchPetsUseCase } from './search-pets'
-import { NoResultsFoundError } from './errors/no-results-found-error'
 
 let petsRepository: InMemoryPetsRepository
 let orgsRepository: InMemoryOrgsRepository
@@ -21,12 +20,14 @@ describe('Search Pets Use Case', () => {
     const org = await orgsRepository.create(makeOrg())
 
     await petsRepository.create(makePet({ org_city: org.city, org_id: org.id }))
-    await petsRepository.create(makePet({ org_city: org.city, org_id: org.id }))
+    await petsRepository.create(
+      makePet({ org_city: 'Cidade de Deus', org_id: org.id }),
+    )
 
     const { pets } = await sut.execute({ city: org.city })
 
-    expect(pets).toHaveLength(2)
-    expect(pets[0].city).toBe(org.city)
+    expect(pets).toHaveLength(1)
+    expect(pets[0].city).toEqual(org.city)
   })
 
   it('should be able to list pets by size', async () => {

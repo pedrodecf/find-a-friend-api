@@ -3,6 +3,7 @@ import { InMemoryOrgsRepository } from '../repositories/in-memory/in-memory-orgs
 import { AuthenticateUseCase } from './authenticate'
 import { hash } from 'bcryptjs'
 import { InvalidCredentialsError } from './errors/invalid-credentials-error'
+import { makeOrg } from '../../tests/factories/make-org'
 
 let orgsRepository: InMemoryOrgsRepository
 let sut: AuthenticateUseCase
@@ -14,15 +15,12 @@ describe('Authenticate Use Case', () => {
   })
 
   it('should be able to authenticate', async () => {
-    await orgsRepository.create({
-      org_name: 'Org Name',
-      owner_name: 'Owner Name',
-      email: 'test@email.com',
-      cep: '12345678',
-      city: 'City',
-      phone: '12345678',
-      password_hash: await hash('password', 6),
-    })
+    await orgsRepository.create(
+      makeOrg({
+        email: 'test@email.com',
+        password_hash: await hash('password', 6),
+      }),
+    )
 
     const { org } = await sut.execute({
       email: 'test@email.com',
@@ -33,15 +31,9 @@ describe('Authenticate Use Case', () => {
   })
 
   it('should not be able to authenticate with wrong password', async () => {
-    await orgsRepository.create({
-      org_name: 'Org Name',
-      owner_name: 'Owner Name',
-      email: 'test@email.com',
-      cep: '12345678',
-      city: 'City',
-      phone: '12345678',
-      password_hash: await hash('password', 6),
-    })
+    await orgsRepository.create(
+      makeOrg({ password_hash: await hash('password', 6) }),
+    )
 
     await expect(() =>
       sut.execute({
@@ -52,15 +44,12 @@ describe('Authenticate Use Case', () => {
   })
 
   it('should not be able to authenticate with wrong email', async () => {
-    await orgsRepository.create({
-      org_name: 'Org Name',
-      owner_name: 'Owner Name',
-      email: 'test@email.com',
-      cep: '12345678',
-      city: 'City',
-      phone: '12345678',
-      password_hash: await hash('password', 6),
-    })
+    await orgsRepository.create(
+      makeOrg({
+        email: 'test@email.com',
+        password_hash: await hash('password', 6),
+      }),
+    )
 
     await expect(() =>
       sut.execute({
