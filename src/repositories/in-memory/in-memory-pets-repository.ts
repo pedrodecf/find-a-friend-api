@@ -1,5 +1,14 @@
-import { Prisma, Pet, Autonomy, Stamina, Size, Age, Type } from '@prisma/client'
-import { PetsRepository } from '../pets-repository'
+import {
+  Prisma,
+  Pet,
+  Autonomy,
+  Stamina,
+  Size,
+  Age,
+  Type,
+  $Enums,
+} from '@prisma/client'
+import { PetsRepository, SearchPetsParams } from '../pets-repository'
 
 export class InMemoryPetsRepository implements PetsRepository {
   public pets: Pet[] = []
@@ -36,5 +45,19 @@ export class InMemoryPetsRepository implements PetsRepository {
     const pet = this.pets.find((pet) => pet.id === id)
 
     return pet || null
+  }
+
+  async searchPets(params: SearchPetsParams) {
+    const pets = this.pets
+      .filter((pet) => pet.city === params.city)
+      .filter((pet) => (params.type ? pet.type === params.type : true))
+      .filter((pet) => (params.age ? pet.age === params.age : true))
+      .filter((pet) => (params.size ? pet.size === params.size : true))
+      .filter((pet) => (params.stamina ? pet.stamina === params.stamina : true))
+      .filter((pet) =>
+        params.autonomy ? pet.autonomy === params.autonomy : true,
+      )
+
+    return pets.length ? pets : null
   }
 }
