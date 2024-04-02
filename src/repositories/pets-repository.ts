@@ -2,11 +2,11 @@ import { Pet, Prisma } from '@prisma/client'
 
 export interface SearchPetsParams {
   city: string
-  type?: string
-  age?: string
-  size?: string
-  stamina?: string
-  autonomy?: string
+  type?: 'DOG' | 'CAT' | 'BIRD' | 'RODENT' | 'REPTILE' | 'OTHER'
+  age?: 'BABY' | 'YOUNG' | 'ADULT' | 'SENIOR' | 'OTHER'
+  size?: 'SMALL' | 'MEDIUM' | 'LARGE' | 'XLARGE' | 'OTHER'
+  stamina?: 'LOW' | 'MEDIUM' | 'HIGH' | 'OTHER'
+  autonomy?: 'LOW' | 'MEDIUM' | 'HIGH' | 'OTHER'
 }
 
 export interface PetsRepository {
