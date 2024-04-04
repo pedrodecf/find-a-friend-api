@@ -13,5 +13,5 @@ export async function getDetails(request: FastifyRequest, reply: FastifyReply) {
 
   const { pet } = await getPetDetailsUseCase.execute({ id: petId })
 
-  return reply.status(200).send(pet)
+  return reply.status(200).send()
 }
